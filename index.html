@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+      body{
+          margin:0;
+          padding:0;
+          background-color: rgb(171, 5, 236);
+      }   
+      h1{
+          text-align:center;
+          color:black;
+          font-weight:600;
+          margin-top:50px;
+      } 
+      p{
+          text-align:center;
+          color:white;
+          font-family: cursive;
+          margin-top:20px;
+      }
+      .container{
+          width:500px;
+          height:400px;
+          margin-left:auto;
+          margin-right:auto;
+          margin-top:50px;
+      }
+      .container .calender{
+          background-color: black;
+          display: flex;
+          text-align: center;
+          padding:20px;
+          height:50px;
+          border-radius: 10px;
+      }
+      .container .calender input{
+        margin-right:50px;
+        height:40px;
+        width:200px;
+      }
+      .container .calender button{
+          background:rgb(171, 5, 236);
+          margin-left:100px;
+          color:black;
+          font-family: cursive;
+          padding:10px;
+          font-weight: bold;
+      }
+      .container .display{
+          display: flex;
+          width: 50px;
+          margin-top:50px;
+      }
+      .container .display .years,
+      .container .display .months,
+      .container .display .days{
+         background-color: black;
+         font-family: cursive;
+         color:white;   
+         padding:25px;
+         margin-left:60px;
+         text-align: center;
+      }
+    </style>
+</head>
+<body>
+    <h1 class="title">AGE CALCULATOR</h1>
+    <p>Calculate your Age Now!</p>
+    <div class="container">
+        <div class="calender">
+            <input type="date" id="date">
+            <button name="Calculate" onclick="Calculate()">Calculate</button>
+        </div>
+        <div class="display">
+            <div class="years"><div id="years">-</div>years</div>
+            <div class="months"><div id="months">-</div>months</div>
+            <div class="days"><div id="days">-</div>days</div>
+        </div>
+    </div>
+    <script>
+        //array of storing the no. of days in a month
+        const months = [31,28,31,30,31,30,31,31,30,31,30,31];
+        function Calculate(){
+            //to get today's date
+            let today = new Date();
+
+            //to get the input date what user has chosen
+            let inputDate = new Date(document.getElementById("date").value);
+            let birthMonth,birthDate,birthYear;
+
+            //separately getting the date, month and year of input 
+            //since we are using an array of month, the array index starts from 0. So we are adding 1 to the month
+            let birthDetails = {
+                date:inputDate.getDate(),
+                month:inputDate.getMonth()+1,
+                year:inputDate.getFullYear()
+            }
+ 
+            //separately getting the data, month and year of today's date
+            let currentYear = today.getFullYear();
+            let currentMonth = today.getMonth()+1;
+            let currentDate = today.getDate();
+            
+            //checking for leap year
+            leapCheck(currentYear);
+            
+            //checking for valid date
+            if(birthDetails.year > currentYear || (birthDetails.month > currentMonth  && birthDetails.year == currentYear) || (birthDetails.date > currentDate && birthDetails.month == currentMonth && birthDetails.year == currentYear)){
+                alert("Not Born Yet");
+                return;
+            }
+
+            birthYear = currentYear - birthDetails.year;
+            if(currentMonth >= birthDetails.month){
+                birthMonth = currentMonth - birthDetails.month;
+            }
+            else{
+                birthYear--;
+                birthMonth = 12 + currentMonth - birthDetails.month;
+            }
+
+            if(currentDate >= birthDetails.date){
+                birthDate = currentDate - birthDetails.date;
+            }
+            else{
+                birthMonth--;
+                let days = months[currentMonth - 2];
+                birthDate = days + currentDate - birthDetails.date;
+                if(birthMonth < 0){
+                    birthMonth = 11;
+                    birthYear--;
+                }
+            }
+            display(birthDate,birthMonth,birthYear);
+        }
+       
+        function display(d,m,y){
+            document.getElementById("years").textContent = y;
+            document.getElementById("months").textContent = m;
+            document.getElementById("days").textContent = d;
+        }
+       
+        function leapCheck(c){
+            if(c%4==0 || (c%100==0 && c%400==0)){
+                months[1] = 29;
+            }
+            else{
+                months[1] = 28;
+            }
+        }
+    </script>
+</body>
+</html>
